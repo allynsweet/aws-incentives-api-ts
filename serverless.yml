@@ -1,0 +1,35 @@
+service: referralrewards
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  # Stage is set using the --stage or -s flags.
+  # If no stage is provided, the stage will be set to dev.
+  stage: ${self:custom.stage}
+  # Set the environment variables based off stage, default is 'dev'
+  environment: ${file(./env_var.json):${self:custom.stage}}
+
+plugins:
+  - serverless-plugin-typescript
+
+custom: 
+  stage: ${opt:stage, 'dev'}
+
+functions:
+  referralRewards:
+    handler: src/handler.issueReward
+    timeout: 300
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - ReferralReward
+              - Arn
+
+resources:
+  Resources:
+    ScraperEvents:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: ${self:custom.stage}-referral-reward-events
+        VisibilityTimeout: 120

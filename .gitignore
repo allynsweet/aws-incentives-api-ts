@@ -1,0 +1,11 @@
+.env
+node_modules/
+.nyc_output
+yarn-error.log
+.DS_Store
+temp/
+dist/
+.serverless/
+.build/
+env_var.json
+.idea/
