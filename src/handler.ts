@@ -1,7 +1,7 @@
 import { Handler, SQSEvent } from 'aws-lambda';
-import RewardService from './services/rewardService';
+import RewardController from 'controllers/rewardController';
 
-const service = new RewardService();
+const service = new RewardController();
 
 export const issueReward: Handler = async (event: SQSEvent) => {
   // Ensure the event originated from SQS at runtime. 
