@@ -7,11 +7,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default class RewardService {
 
-    dateStamp = '';
-    REGION_NAME = 'us-east-1';
-    SERVICE_NAME = 'AGCODService';
-
-    incentivePayload: IncentivePayload = {
+    private REGION_NAME = 'us-east-1';
+    private SERVICE_NAME = 'AGCODService';
+    private dateStamp = '';
+    private incentivePayload: IncentivePayload = {
         creationRequestId: `${process.env.AMAZON_PARTNER_ID}-1`,
         partnerId: process.env.AMAZON_PARTNER_ID,
         value: {
@@ -21,11 +20,13 @@ export default class RewardService {
     }
 
     constructor() {
+        // Format the timestamp to conform with Amazon's requirements.
         this.dateStamp = new Date().toISOString().slice(0, 19) + 'Z';
         this.dateStamp = this.dateStamp.replace(/:/g, '');
         this.dateStamp = this.dateStamp.replace(/-/g, '');
         // Create a unique request ID, but request ID cannot be above 40 char
         const requestId: string = String(uuidv4()).substr(0, 13);
+        // Creation Request must begin with the partner ID followed by a -
         this.incentivePayload.creationRequestId = `${process.env.AMAZON_PARTNER_ID}-${requestId}`
     }
 

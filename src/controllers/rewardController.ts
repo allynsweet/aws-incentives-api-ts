@@ -13,6 +13,10 @@ export default class RewardController {
     }
 
     async issueReward(recipientId: string): Promise<void> {
+        // Authenticates minion, returns true if successful
+        const isAuthed: boolean = await this.apiService.authenticate();
+        // If the minion cannot authenticate, don't continue to generate a giftcard code (these are non-refundable).
+        if (!isAuthed) { console.error('Could not authenticate. Aborting.'); return; }
         // Hit the incentives API and generate an alphanumeric code.
         const giftcardCode = await this.rewardService.generateGiftCardCode();
         // Check that the giftcard was set, would be undefined if failed.

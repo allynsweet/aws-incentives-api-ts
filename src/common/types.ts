@@ -1,3 +1,8 @@
+export interface MinionLogin {
+    email: string;
+    password: string;
+}
+
 export interface IncentivePayload {
     creationRequestId: string;
     partnerId: string;
