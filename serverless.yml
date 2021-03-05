@@ -18,7 +18,7 @@ custom:
 functions:
   referralRewards:
     handler: src/handler.issueReward
-    timeout: 300
+    timeout: 20
     events:
       - sqs:
           arn:
