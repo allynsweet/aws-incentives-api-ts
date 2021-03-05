@@ -32,7 +32,7 @@ export default class RewardService {
     /**
      * Generate a new Amazon gift card.
      */
-    async generateGiftCardCode(): Promise<string> {
+    async generateGiftCardCode(): Promise<string | undefined> {
         // Step 1: Build a canonical request and hash using SHA256
         const canonicalHash = this.generateCanonicalRequest();
         // Step 2: Build a "String to Sign" in accordance to AWS Sig Verification v4
@@ -115,7 +115,7 @@ export default class RewardService {
      * Uses the previously calculated canonical request to create a single "String to Sign" for the request
      * @param canonicalRequestHash 
      */
-    private buildStringToSign(canonicalRequestHash): string {
+    private buildStringToSign(canonicalRequestHash: string): string {
         const abridgedDate = this.dateStamp.substring(0, 8);
         const stringToSign =
             "AWS4-HMAC-SHA256\n" +
