@@ -29,14 +29,18 @@ export default class RewardService {
         this.incentivePayload.creationRequestId = `${process.env.AMAZON_PARTNER_ID}-${requestId}`
     }
 
+    /**
+     * Generate a new Amazon gift card.
+     */
     async generateGiftCardCode(): Promise<string> {
         // Step 1: Build a canonical request and hash using SHA256
         const canonicalHash = this.generateCanonicalRequest();
-        // Step 2: 
+        // Step 2: Build a "String to Sign" in accordance to AWS Sig Verification v4
         const stringToSign = this.buildStringToSign(canonicalHash);
+        // Step 3: Build the auth header for the request
         const authSignature = this.generateAuthorizationHeader(stringToSign);
 
-        // Build Amazon headers
+        // Amazon headers
         const config = {
             headers: {
                 "host": process.env.AWS_INCENTIVES_HOST,
@@ -58,14 +62,16 @@ export default class RewardService {
                 return;
             }
             // Return the alphanumeric gift card code.
-            console.log(cardResult);
-            console.log(`Gift card successfully created with code ${cardResult.gcClaimCode}`);
+            console.log(`Gift card successfully created with code ${cardResult.gcClaimCode}.`);
             return cardResult.gcClaimCode;
         } catch (error) {
             console.error(error);
         }
     }
 
+    /**
+     *  Generates the signature to put in the POST message header 'Authorization'
+     */
     private generateAuthorizationHeader(stringToSign: string): string {
         const derivedKey = this.buildDerivedKey();
         const finalSignature = CryptoJS.HmacSHA256(stringToSign, derivedKey).toString(CryptoJS.enc.Hex)
@@ -81,6 +87,9 @@ export default class RewardService {
         return response;
     }
 
+    /**
+     * Creates a printout of all information sent to the AGCOD service
+     */
     private generateCanonicalRequest(): string {
         // Turn payload to string, and trim all whitespace
         const payloadString = JSON.stringify(this.incentivePayload).trim();
@@ -102,6 +111,10 @@ export default class RewardService {
         return CryptoJS.SHA256(request.trim()).toString(CryptoJS.enc.Hex);
     }
 
+    /**
+     * Uses the previously calculated canonical request to create a single "String to Sign" for the request
+     * @param canonicalRequestHash 
+     */
     private buildStringToSign(canonicalRequestHash): string {
         const abridgedDate = this.dateStamp.substring(0, 8);
         const stringToSign =
@@ -112,6 +125,9 @@ export default class RewardService {
         return stringToSign
     }
 
+    /**
+     * Create a derived key based on the secret key and parameters related to the call
+     */
     private buildDerivedKey() {
         const signatureAWSKey = `AWS4${process.env.AWS_SECRET_SIGNING_KEY}`;
         const abridgedDate = this.dateStamp.substring(0, 8);
