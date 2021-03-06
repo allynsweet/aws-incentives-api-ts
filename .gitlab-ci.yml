@@ -1,0 +1,111 @@
+variables:
+  ECR_REGISTRY: 370430940543.dkr.ecr.us-east-1.amazonaws.com/gridlite-referral-rewards
+  ECR_REGISTRY_USER: AWS
+  ECR_REGISTRY_PASSWORD: ""
+
+  CI_IMAGE: "${ECR_REGISTRY}/ci:${CI_COMMIT_REF_NAME}"
+
+stages:
+  - temp-images
+  - test
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+    - .yarn
+
+.rule-mr: &rule-mr
+  if: |
+    $CI_MERGE_REQUEST_ID
+  when: on_success
+
+.rule-dev: &rule-dev
+  if: |
+    $CI_COMMIT_REF_NAME == "develop"
+  when: on_success
+
+.rule-prd: &rule-prd
+  if: |
+    $CI_COMMIT_REF_NAME == "master"
+  when: on_success
+
+# temp-images stage builds and pushes intermediate container images
+# which will be used by later stages. This is a workaround for
+# gitlab-ci's lack of `dockerfile` functionality.
+# https://gitlab.com/gitlab-org/gitlab/-/issues/22801
+ci:
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint:
+      - ""
+  stage: temp-images
+  rules:
+    - <<: *rule-mr
+    - <<: *rule-dev
+    - <<: *rule-prd
+    - when: never
+  before_script:
+    - "echo \"{ \\\"credsStore\\\": \\\"ecr-login\\\" }\" > /kaniko/.docker/config.json"
+  script:
+    - /kaniko/executor --cache=true --context=$CI_PROJECT_DIR --dockerfile=docker/ci.Dockerfile --destination="${CI_IMAGE}"
+
+shellcheck:
+  image: "${CI_IMAGE}"
+  stage: test
+  rules:
+    - <<: *rule-mr
+    - <<: *rule-dev
+    - <<: *rule-prd
+    - when: never
+  script:
+    - shellcheck -x --shell bash $(find ./scripts -type f)
+
+eslint:
+  image: "${CI_IMAGE}"
+  stage: test
+  allow_failure: true
+  rules:
+    - <<: *rule-mr
+    - <<: *rule-dev
+    - <<: *rule-prd
+    - when: never
+  cache:
+    key: scraper-src
+    paths:
+      - node_modules/
+  script:
+    - yarn 
+    - eslint . --ext .ts -c ${CI_PROJECT_DIR}/.eslintrc.js
+
+.deploy-template:
+  stage: deploy
+  image: "${CI_IMAGE}"
+  cache:
+    key: scraper-src
+    paths:
+      - node_modules/
+  before_script:
+    - yarn
+    # Create AWS credentials
+    - mkdir -p /root/.aws
+    - echo -e "[default]\naws_access_key_id = $AWS_ACCESS_KEY_ID\naws_secret_access_key = $AWS_SECRET_ACCESS_KEY" > /root/.aws/credentials
+    - mv $CREDS_JSON env_var.json
+
+deploy:dev:
+  extends:
+    - .deploy-template
+  rules:
+    - <<: *rule-dev
+    - when: never
+  script:
+    - serverless deploy -s dev
+
+deploy:prd:
+  extends:
+    - .deploy-template
+  rules:
+    - <<: *rule-prd
+    - when: never
+  script:
+    - serverless deploy -s prd
