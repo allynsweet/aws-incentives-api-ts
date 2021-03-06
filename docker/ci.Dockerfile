@@ -8,6 +8,7 @@ RUN apk update && \
         nano \
         vim \
         make \
+        py3-pip \
         bash && \
     yarn global add \
         typescript \
