@@ -12,7 +12,7 @@ export const issueReward: Handler = async (event: SQSEvent) => {
   
   // Ensure recipient is passed to function.
   if (!message.referer_id) { console.error('Required message attribute "referer_id" not found.'); return; }
-  const recipient = message.recipient.stringValue;
+  const recipient = message.referer_id.stringValue;
   await service.issueReward(recipient);
   return {};
 };
