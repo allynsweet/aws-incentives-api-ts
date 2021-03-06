@@ -28,7 +28,7 @@ functions:
 
 resources:
   Resources:
-    ScraperEvents:
+    ReferralReward:
       Type: "AWS::SQS::Queue"
       Properties:
         QueueName: ${self:custom.stage}-referral-reward-events
