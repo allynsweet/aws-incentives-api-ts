@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { sendError } from 'common/helper';
+import { sendError } from '../common/helper';
 import { MinionLogin } from '../common/types';
 
 export default class ApiService {
