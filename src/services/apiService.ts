@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { sendError } from 'common/helper';
 import { MinionLogin } from '../common/types';
 
 export default class ApiService {
@@ -24,6 +25,7 @@ export default class ApiService {
             this.authorizationHeader = `Bearer ${access_token}`;
             return true;
         } catch (error) {
+            sendError(error);
             console.error(error);
         }
     }
@@ -46,6 +48,7 @@ export default class ApiService {
             const response = await axios.post(`${this.API_URL}/${endpoint}`, data, { headers });
             return response;
         } catch (error) {
+            sendError(error);
             console.error(error);
         }
     }
