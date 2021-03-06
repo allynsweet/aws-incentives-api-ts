@@ -54,7 +54,7 @@ shellcheck:
   image: "${CI_IMAGE}"
   stage: test
   retry:
-    max: 5
+    max: 2
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
@@ -70,7 +70,7 @@ eslint:
   image: "${CI_IMAGE}"
   stage: test
   retry:
-    max: 5
+    max: 2
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
@@ -91,7 +91,7 @@ eslint:
   stage: deploy
   image: "${CI_IMAGE}"
   retry:
-    max: 5
+    max: 2
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
