@@ -53,6 +53,11 @@ ci:
 shellcheck:
   image: "${CI_IMAGE}"
   stage: test
+  retry:
+    max: 5
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
   rules:
     - <<: *rule-mr
     - <<: *rule-dev
@@ -64,7 +69,11 @@ shellcheck:
 eslint:
   image: "${CI_IMAGE}"
   stage: test
-  allow_failure: true
+  retry:
+    max: 5
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
   rules:
     - <<: *rule-mr
     - <<: *rule-dev
@@ -81,6 +90,11 @@ eslint:
 .deploy-template:
   stage: deploy
   image: "${CI_IMAGE}"
+  retry:
+    max: 5
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
   cache:
     key: scraper-src
     paths:
