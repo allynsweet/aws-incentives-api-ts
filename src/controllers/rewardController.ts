@@ -1,4 +1,4 @@
-import ApiService from 'services/apiService';
+import ApiService from '../services/apiService';
 import RewardService from '../services/rewardService';
 
 export default class RewardController {

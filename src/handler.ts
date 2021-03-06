@@ -1,5 +1,5 @@
 import { Handler, SQSEvent } from 'aws-lambda';
-import RewardController from 'controllers/rewardController';
+import RewardController from './controllers/rewardController';
 
 const service = new RewardController();
 
