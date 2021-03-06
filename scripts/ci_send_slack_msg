@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+main() {
+  if [[ $# -ne 2 ]]; then
+    cat <<EOF
+Usage: $0
+Arguments:
+  Required:
+    channel - name of slack channel to send message to (without leading #)
+    message - slack message contents to send
+Environment Variables:
+  Required:
+    SLACK_WEBHOOK_URL - Slack webhook URL for integration
+Examples:
+  $0 gridlite-bots "Who do you think you are? I am!"
+EOF
+    return 1
+  fi
+  local -r channel="$1"
+  local -r message="$2"
+
+  local -r data="payload={\"channel\": \"#${channel}\", \"username\": \"GridLite Intern\", \"text\": \"${message}\", \"icon_emoji\": \":gridlite:\"}"
+  curl -X POST --data-urlencode "${data}" "${SLACK_WEBHOOK_URL}"
+}
+
+main "$@"
