@@ -78,7 +78,7 @@ export default class RewardService {
         const finalSignature = CryptoJS.HmacSHA256(stringToSign, derivedKey).toString(CryptoJS.enc.Hex)
 
         const abridgedDate = this.dateStamp.substring(0, 8);
-        const credential = `Credential=${process.env.AWS_ACCESS_KEY}/${abridgedDate}/${this.REGION_NAME}/${this.SERVICE_NAME}/aws4_request`;
+        const credential = `Credential=${process.env.AWS_INCENTIVES_ACCESS_KEY}/${abridgedDate}/${this.REGION_NAME}/${this.SERVICE_NAME}/aws4_request`;
         const signedHeaders = 'SignedHeaders=accept;host;x-amz-date;x-amz-target';
         const response =
             "AWS4-HMAC-SHA256 " +
@@ -130,7 +130,7 @@ export default class RewardService {
      * Create a derived key based on the secret key and parameters related to the call
      */
     private buildDerivedKey() {
-        const signatureAWSKey = `AWS4${process.env.AWS_SECRET_SIGNING_KEY}`;
+        const signatureAWSKey = `AWS4${process.env.AWS_INCENTIVES_SECRET_SIGNING_KEY}`;
         const abridgedDate = this.dateStamp.substring(0, 8);
         const kDate = CryptoJS.HmacSHA256(abridgedDate, signatureAWSKey);
         const kRegion = CryptoJS.HmacSHA256(this.REGION_NAME, kDate);
