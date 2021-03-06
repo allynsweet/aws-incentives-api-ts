@@ -1,6 +1,5 @@
 import ApiService from 'services/apiService';
 import RewardService from '../services/rewardService';
-require('dotenv').config()
 
 export default class RewardController {
 

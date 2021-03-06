@@ -17,8 +17,8 @@ export const issueReward: Handler = async (event: SQSEvent) => {
   return {};
 };
 
-
 // Type guard to check if the event is an SQSEvent type at runtime.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function instanceOfSQSEvent(event: any): event is SQSEvent {
   return 'Records' in event;
 }
