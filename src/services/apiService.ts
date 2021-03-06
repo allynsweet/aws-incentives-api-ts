@@ -34,8 +34,8 @@ export default class ApiService {
      */
     async sendGiftCard(recipientId: string, giftcardCode: string): Promise<void> {
         await this.post(
-            { recipient_id: recipientId, gift_card_code: giftcardCode },
-            '',
+            { amazon_gift_card_claim_code: giftcardCode },
+            `users/${recipientId}/disperse_referral_reward`,
             { Authorization: this.authorizationHeader }
         );
     }
