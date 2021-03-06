@@ -17,9 +17,8 @@ export default class ApiService {
         };
         try {
             const response = await this.post(payload, 'users/authenticate');
-            // Check response was successful and access_token exists.
-            console.log(response);
-            if (!response || response.data.access_token) { return; }
+            // Check response was successful and access_token exists.=
+            if (!response || !response.data.access_token) { return; }
 
             const access_token = response.data.access_token;
             this.authorizationHeader = `Bearer ${access_token}`;
