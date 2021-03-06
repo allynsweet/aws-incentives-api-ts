@@ -9,6 +9,7 @@ RUN apk update && \
         vim \
         make \
         py3-pip \
+        alpine-sdk \
         bash && \
     yarn global add \
         typescript \
