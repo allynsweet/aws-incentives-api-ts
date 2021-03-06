@@ -9,6 +9,7 @@ RUN apk update && \
         vim \
         make \
         py3-pip \
+        g++ \
         bash && \
     yarn global add \
         typescript \
