@@ -3,6 +3,7 @@ import CryptoJS from 'crypto-js';
 import { ResponseStatus } from '../common/enum';
 import { IncentivePayload, IncentiveResponse } from '../common/types';
 import { v4 as uuidv4 } from 'uuid';
+import { sendError } from 'common/helper';
 
 
 export default class RewardService {
@@ -66,7 +67,7 @@ export default class RewardService {
             console.log(`Gift card successfully created with code ${cardResult.gcClaimCode}.`);
             return cardResult.gcClaimCode;
         } catch (error) {
-            console.error(error);
+            await sendError(error);
         }
     }
 

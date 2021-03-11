@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export async function sendError(errorMessage: string): Promise<void> {
-    console.log(errorMessage);
+    console.error(errorMessage);
     const SLACK_WEBHOOK =
         "https://hooks.slack.com/services/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";
     await axios.post(SLACK_WEBHOOK, {
