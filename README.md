@@ -23,10 +23,10 @@ const service = new AWSGiftcardService(
     "YourSecretKey",
     "agcod-v2-gamma.amazon.com",         // Sandbox Host
     "https://agcod-v2-gamma.amazon.com", // Sandbox URL
-    "us-east-1",                                     // AWS Region
+    "us-east-1",                         // AWS Region (optional, default us-east-1
 );
 // Pass the amount in USD you want the giftcard to be, in this case $5
-// the giftcard amount must be an integer.
-const giftcardCode = await service.generateGiftCardCode(5);
+// the giftcard amount must be an integer. Currency code is optional, default is 'USD'
+const giftcardCode = await service.generateGiftCardCode(5, 'USD');
 
 ```
