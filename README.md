@@ -9,7 +9,7 @@ This library implements the [AWS Signature Version 4](https://docs.aws.amazon.co
 
 # Usage
 
-Using the service is simple. Instantiate the service with the following credentials, then call the `.generate()` method to generate a new giftcard code:
+Using the service is simple. Instantiate the service with the following credentials, then call the `generateGiftCardCode` method to generate a new giftcard code:
 * PartnerID
 * AWS Incentives API Access Key
 * AWS Incentives API Secret Key
