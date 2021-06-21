@@ -1,4 +1,4 @@
-# AWS Incentives API
+# Amazon Incentives API
 
 A TypeScript service for using the [Amazon Gift Card API](https://developer.amazon.com/incentives-api) (aka. Amazon Incentives API) to generate Amazon gift cards. 
 
